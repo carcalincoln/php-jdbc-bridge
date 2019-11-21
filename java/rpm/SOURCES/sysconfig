@@ -2,16 +2,16 @@
 # PJBridge init configuration
 
 # The JDBC driver entry point
-export DRIVER=""
+export DRIVER="org.postgresql.Driver"
 
 # The port the bridge will listen on
 export PORT="4444"
 
 # This should point to a JRE/JDK
-export JAVA_HOME="/usr/lib/jvm/java-1.6.0"
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk/"
 
 # The user the bridge will run as
-RUNAS_USER="pjbridge"
+RUNAS_USER="marcos"
 
 # Install directory
 WORKING_DIR="/opt/pjbridge"

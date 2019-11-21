@@ -48,39 +48,37 @@ public class ServerThread extends Thread {
     }
     
     public void run() {
-        
         try {
-            
             String line;
-            
             while ((line = in.readLine()) != null) {
-                
                 String[] cmd = Utils.parseString(line, true);
-                
                 if (cmd[0].equals("connect")) {
-                    
                     serverCommands.connect(cmd);
-                    
                 } else if (cmd[0].equals("exec")) {
-                    
                     serverCommands.exec(cmd);
-                    
                 } else if (cmd[0].equals("fetch_array")) {
-                    
                     serverCommands.fetch_array(cmd);
-                    
                 } else if (cmd[0].equals("free_result")) {
-                    
                     serverCommands.free_result(cmd);
-                    
-                } else {
-                    
+                }else if (cmd[0].equals("num_rows")) {
+                    serverCommands.numRows(cmd);
+                }else if (cmd[0].equals("columns")) {
+                    serverCommands.columns(cmd);
+                }else if (cmd[0].equals("close")) {
+                    serverCommands.close(cmd);
+                }else if (cmd[0].equals("rollback")) {
+                    serverCommands.rollback(cmd);
+                }else if (cmd[0].equals("commit")) {
+                    serverCommands.commit(cmd);
+                }else if (cmd[0].equals("setAutoCommit")) {
+                    serverCommands.setAutoCommit(cmd);
+                }
+                else {
                     break;
                 }
                 out.flush();
             }
-            
-            serverCommands.close();
+            //serverCommands.close();
             socket.close();
             
         } catch (IOException e) {
@@ -95,10 +93,8 @@ public class ServerThread extends Thread {
     }
     
     public void write(String k, String v) {
-        
         if (v == null)
             v = "";
-        
         out.println(
                 Base64.encodeString(k) + " " +
                 Base64.encodeString(v)
@@ -106,7 +102,6 @@ public class ServerThread extends Thread {
     }
     
     void write(String k, int v) {
-        
         out.println(
                 Base64.encodeString(k) + " " +
                 Base64.encodeString(new Integer(v).toString())
@@ -114,7 +109,6 @@ public class ServerThread extends Thread {
     }
 
     void write(String k, int v1, int v2) {
-        
         out.println(
                 Base64.encodeString(k) + " " +
                 Base64.encodeString(new Integer(v1).toString()) + " " +

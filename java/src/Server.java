@@ -54,40 +54,27 @@ public class Server extends Thread {
 
 
     public void init() {
-        
         try {
-            
             serverSocket = new ServerSocket(port);
             Utils.log("notice", "listening on " + port);
-            
         } catch (IOException e) {
-            
             Utils.log("error", "could not listen on " + port);
             return;
         }
-        
         try {
-            
-	    Class.forName(driver);
-	    Utils.log("notice", "loaded " + driver);
-            
+            Class.forName(driver);
+            Utils.log("notice", "loaded " + driver);
         } catch (ClassNotFoundException ex) {
-            
             Utils.log("error", "could not load JDBC driver");
             return;
         }
     }
     
     public void run() {
-        
         while (listening) {
-            
             try {
-                
                 new ServerThread(serverSocket.accept()).start();
-                
             } catch (IOException ex) {
-                
                 Utils.log("error", "could not create thread");
                 return;
             }
@@ -95,22 +82,17 @@ public class Server extends Thread {
     }
     
     public void shutdown() {
-        
         listening = false;
         interrupt();
     }
     
     public static void main(String[] args) {
-        
         Server server = new Server(args[0], args[1]);
-        
         try {
-            
+        	Utils.log("debug", "start");
             server.start();
             server.join();
-            
         } catch (InterruptedException ex) {
-            
             Utils.log("error", "could not join thread");
         }
     }

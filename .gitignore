@@ -10,3 +10,4 @@ java/tmp
 java/rpm/*
 !java/rpm/specfile
 !java/rpm/SOURCES/
+/bin/
