@@ -44,6 +44,13 @@ public class Utils {
 		System.out.println(l + ": " + s);
 	}
 
+	public static synchronized void log(String nivel,String comando,String[] parametros) {
+		Utils.log(nivel, "Inicio" + comando);
+		for (int i = 0; i < parametros.length; i++) {
+			Utils.log(nivel, i + " - "+ parametros[i]);
+		}
+		Utils.log(nivel, "Fin" + comando);
+	}
 	/**
 	 * Reads a whole file into a string.
 	 * 
@@ -75,6 +82,13 @@ public class Utils {
 			} catch (IOException ex) {
 
 				log("error", "could not read file " + fn);
+			}finally {
+				try {
+					fr.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 		} catch (FileNotFoundException ex) {

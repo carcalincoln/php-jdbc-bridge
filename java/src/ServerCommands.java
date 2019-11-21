@@ -56,6 +56,7 @@ public class ServerCommands {
 	 * @param cmd
 	 */
 	public void connect(String[] cmd) {
+		Utils.log("debug", "connect", cmd);
 		if (cmd.length == 4) {
 			try {
 				Connection conn = DriverManager.getConnection(cmd[1], cmd[2], cmd[3]);
@@ -78,6 +79,7 @@ public class ServerCommands {
 	 * @param cmd
 	 */
 	public void exec(String[] cmd) {
+		Utils.log("debug", "exec", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length >= 3) {
 			try {
@@ -115,6 +117,7 @@ public class ServerCommands {
 	 * @param cmd
 	 */
 	public void fetch_array(String[] cmd) {
+		Utils.log("debug", "fetch_array", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length == 3) {
 			ResultSet rs = (ResultSet) results.get(cmd[2]);
@@ -152,6 +155,7 @@ public class ServerCommands {
 	 * @param cmd
 	 */
 	public void numRows(String[] cmd) {
+		Utils.log("debug", "numRows", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length == 3) {
 			ResultSet rs = (ResultSet) results.get(cmd[2]);
@@ -183,6 +187,7 @@ public class ServerCommands {
 	 * @param cmd
 	 */
 	public void free_result(String[] cmd) {
+		Utils.log("debug", "free_result", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length == 3) {
 			ResultSet rs = (ResultSet) results.get(cmd[2]);
@@ -209,6 +214,7 @@ public class ServerCommands {
 	 * Release the JDBC connection.
 	 */
 	public void close(String[] cmd) {
+		Utils.log("debug", "close", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn == null){serverThread.write("err");}
 		else
@@ -224,9 +230,10 @@ public class ServerCommands {
 	}
 
 	public void columns(String[] cmd) {
+		Utils.log("debug", "columns", cmd);
 		Connection conn = getConnection(cmd);
-		if (conn != null && cmd.length == 2) {
-			ResultSet rs = (ResultSet) results.get(cmd[1]);
+		if (conn != null && cmd.length == 3) {
+			ResultSet rs = (ResultSet) results.get(cmd[2]);
 			if (rs == null) {
 				Utils.log("error", "Unexpected error encountered");
 				serverThread.write("err");
@@ -255,6 +262,7 @@ public class ServerCommands {
 	 * @param cmd
 	 */
 	public void rollback(String[] cmd) {
+		Utils.log("debug", "rollback", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length >= 2) {
 			try {
@@ -270,6 +278,7 @@ public class ServerCommands {
 		}
 	}
 	public void commit(String[] cmd) {
+		Utils.log("debug", "commit", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length >= 2) {
 			try {
@@ -287,17 +296,13 @@ public class ServerCommands {
 	}
 
 	public void setAutoCommit(String[] cmd) {
+		Utils.log("debug", "setAutoCommit", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length >= 2) {
 			try {
 				boolean ok=true;
-				Utils.log("debug", "autocommit "+ cmd.length );
-				for (int i = 0; i < cmd.length; i++) {
-					Utils.log("debug", i + " - "+ cmd[i]);
-				}
 				if(cmd.length>=3) {
 					ok=Boolean.parseBoolean(cmd[2]);
-					Utils.log("debug", "ok"+ ok);
 				}
 				conn.setAutoCommit(ok);
 				serverThread.write("ok");

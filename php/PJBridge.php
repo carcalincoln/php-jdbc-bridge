@@ -145,6 +145,20 @@ class PJBridge
         }
         return -1;
     }
+    public function columns(string $res)
+    {
+        $reply = $this->exchange(['columns', $this->conID,$res]);
+        if ($reply[0] === 'ok') {
+            $columns = [];
+            for ($i = 0; $i < $reply[1]; ++ $i) {
+                $col = $this->parse_reply($this->sock);
+                $columns[$col[0]] = $col[1];
+            }
+            return $columns;
+        }
+        return -1;
+    }
+    
     public function commit():bool
     {
         $reply = $this->exchange([
