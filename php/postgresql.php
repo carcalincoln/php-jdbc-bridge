@@ -41,7 +41,7 @@ print_r($db->columns($cursor));
     print_r($row);
 }*/
 $db->free_result($cursor);
-$db->close();
+//$db->close();
 
 //$db2->close();
 

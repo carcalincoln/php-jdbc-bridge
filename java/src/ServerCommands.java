@@ -44,6 +44,13 @@ public class ServerCommands {
 		}
 		return conn;
 	}
+	private ResultSet getResultSet(String[] cmd) {
+		ResultSet res = null;
+		if (cmd.length >= 3) {
+			res = results.get(cmd[2]);
+		}
+		return res;
+	}
 
 	/** Creates a new instance of ServerCommands */
 	public ServerCommands(ServerThread serverThread) {
@@ -111,6 +118,64 @@ public class ServerCommands {
 		}
 	}
 
+	public void result(String[] cmd) {
+		Utils.log("debug", "result", cmd);
+		Connection conn = getConnection(cmd);
+		if (conn != null && cmd.length >= 4) {
+			ResultSet rs = getResultSet(cmd);
+			if (rs != null) {
+				try {
+					String string = rs.getString(cmd[3]);
+					serverThread.write("ok",string);
+				} catch (SQLException ex) {
+					Utils.log("error", "SQL exception encountered: " + ex.getMessage());
+					serverThread.write("ex");
+				}
+			} else {
+				Utils.log("error", "Unexpected error encountered");
+				serverThread.write("err");
+			}
+
+		} else {
+			Utils.log("error", "Unexpected error encountered");
+			serverThread.write("err");
+		} 
+		
+	}
+	public void fetch_row(String[] cmd) {
+		Utils.log("debug", "fetch_row", cmd);
+		Connection conn = getConnection(cmd);
+		if (conn != null && cmd.length >= 3) {
+			ResultSet rs = getResultSet(cmd);
+			if (rs != null) {
+				try {
+					int cant=1;
+					if(cmd.length==4){
+						cant=Integer.parseInt(cmd[3]);
+					}
+					boolean ok=false;
+					for (int i = 0; i < cant; i++) {
+						ok=rs.next();
+					}
+					if(ok) {
+						serverThread.write("ok");
+					} else {
+						serverThread.write("end");
+					}
+				} catch (SQLException ex) {
+					Utils.log("error", "SQL exception encountered: " + ex.getMessage());
+					serverThread.write("ex");
+				}
+			} else {
+				Utils.log("error", "Unexpected error encountered");
+				serverThread.write("err");
+			}
+
+		} else {
+			Utils.log("error", "Unexpected error encountered");
+			serverThread.write("err");
+		}
+	}
 	/**
 	 * Fetch a row from a ResultSet.
 	 * 
@@ -120,7 +185,7 @@ public class ServerCommands {
 		Utils.log("debug", "fetch_array", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length == 3) {
-			ResultSet rs = (ResultSet) results.get(cmd[2]);
+			ResultSet rs = getResultSet(cmd);
 			if (rs != null) {
 				try {
 					if (rs.next()) {
@@ -158,7 +223,7 @@ public class ServerCommands {
 		Utils.log("debug", "numRows", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length == 3) {
-			ResultSet rs = (ResultSet) results.get(cmd[2]);
+			ResultSet rs = getResultSet(cmd);
 			if (rs == null) {
 				Utils.log("error", "Unexpected error encountered");
 				serverThread.write("err");
@@ -190,7 +255,7 @@ public class ServerCommands {
 		Utils.log("debug", "free_result", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length == 3) {
-			ResultSet rs = (ResultSet) results.get(cmd[2]);
+			ResultSet rs = getResultSet(cmd);
 			if (rs != null) {
 				results.remove(cmd[2]);
 				try {
@@ -233,7 +298,7 @@ public class ServerCommands {
 		Utils.log("debug", "columns", cmd);
 		Connection conn = getConnection(cmd);
 		if (conn != null && cmd.length == 3) {
-			ResultSet rs = (ResultSet) results.get(cmd[2]);
+			ResultSet rs = getResultSet(cmd);
 			if (rs == null) {
 				Utils.log("error", "Unexpected error encountered");
 				serverThread.write("err");
@@ -314,6 +379,6 @@ public class ServerCommands {
 			Utils.log("error", "Unexpected error encountered");
 			serverThread.write("err");
 		}
-		
 	}
+
 }

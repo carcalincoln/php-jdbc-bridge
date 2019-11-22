@@ -58,6 +58,8 @@ public class ServerThread extends Thread {
                     serverCommands.exec(cmd);
                 } else if (cmd[0].equals("fetch_array")) {
                     serverCommands.fetch_array(cmd);
+                } else if (cmd[0].equals("fetch_row")) {
+                    serverCommands.fetch_row(cmd);
                 } else if (cmd[0].equals("free_result")) {
                     serverCommands.free_result(cmd);
                 }else if (cmd[0].equals("num_rows")) {
@@ -72,6 +74,8 @@ public class ServerThread extends Thread {
                     serverCommands.commit(cmd);
                 }else if (cmd[0].equals("setAutoCommit")) {
                     serverCommands.setAutoCommit(cmd);
+                }else if (cmd[0].equals("result")) {
+                    serverCommands.result(cmd);
                 }
                 else {
                     break;

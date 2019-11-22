@@ -36,6 +36,9 @@ class PJBridge
 
     public function __destruct()
     {
+        if($this->conID!=null){
+            $this->close();
+        }
         fclose($this->sock);
     }
 
@@ -94,7 +97,29 @@ class PJBridge
             return $reply[1];
         return false;
     }
-
+    
+    public function fetch_row(string $res, int $rowNumber=1):bool
+    {
+        $reply = $this->exchange([
+            'fetch_row',
+            $this->conID,
+            $res,$rowNumber
+        ]);
+        return $reply[0] === 'ok';
+    }
+    public function result(string $res, fixed $column):String
+    {
+        $reply = $this->exchange([
+            'result',
+            $this->conID,
+            $res,$column
+        ]);
+        if($reply[0] === 'ok'){
+            return $reply[1];
+        }
+        return FALSE;
+    }
+    
     public function fetch_array(string $res)
     {
         $reply = $this->exchange([
