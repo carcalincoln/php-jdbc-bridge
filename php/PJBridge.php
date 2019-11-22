@@ -107,7 +107,7 @@ class PJBridge
         ]);
         return $reply[0] === 'ok';
     }
-    public function result(string $res, fixed $column):String
+    public function result(string $res, $column):String
     {
         $reply = $this->exchange([
             'result',

@@ -37,9 +37,11 @@ if(!$result){
 $cursor = $db->exec('SELECT * FROM desa72.prueba');
 
 print_r($db->columns($cursor));
-/*while($row = $db->fetch_array($cursor)){
-    print_r($row);
-}*/
+while($db->fetch_row($cursor)){
+    print_r("id: " .$db->result($cursor,"id")."\n");
+    print_r("descripcion: ".$db->result($cursor,"descripcion")."\n");
+    
+}
 $db->free_result($cursor);
 //$db->close();
 
