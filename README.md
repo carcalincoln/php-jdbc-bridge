@@ -79,4 +79,5 @@ while($row = $db->fetch_array($cursor)){
 }
 
 $db->free_result($cursor);
+$db->close();
 ```
